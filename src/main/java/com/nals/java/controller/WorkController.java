@@ -21,57 +21,54 @@ import com.nals.java.exception.ResourceNotFoundException;
 import com.nals.java.model.Work;
 import com.nals.java.repository.WorkRepository;
 
-@RestController @CrossOrigin(origins = "http://localhost:4200")
+@RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/v1")
 public class WorkController {
 	@Autowired
-    private WorkRepository workRepository;
+	private WorkRepository workRepository;
 
-    @GetMapping("/work")
-    public List<Work> getAllWork() {
-        return workRepository.findAll();
-    }
-    @GetMapping("/work/{id}")
-    public ResponseEntity<Work> getWorkById(@PathVariable(value = "id") Long workId)
-        throws ResourceNotFoundException {
-        Work work = workRepository.findById(workId)
-          .orElseThrow(() -> new ResourceNotFoundException("Work not found for this id :: " + workId));
-        return ResponseEntity.ok().body(work);
-    }
-    
-    @PostMapping("/work")
-    public Work createWork(@Valid @RequestBody Work work) {
-        return workRepository.save(work);
-    }
-    
-    @PutMapping("/work/{id}")
-    public ResponseEntity<Work> updateWork(@PathVariable(value = "id") Long workId,
-         @Valid @RequestBody Work workDetails) throws ResourceNotFoundException {
-        Work work = workRepository.findById(workId)
-        .orElseThrow(() -> new ResourceNotFoundException("Work not found for this id :: " + workId));
-        
-        work.setWorkName(workDetails.getWorkName());
-        work.setStartingDate(workDetails.getStartingDate());
-        work.setEndingDate(workDetails.getEndingDate());
-        work.setStatus(workDetails.getStatus());
-        final Work updatedWork = workRepository.save(work);
-        return ResponseEntity.ok(updatedWork);
+	@GetMapping("/work")
+	public List<Work> getAllWork() {
+		return workRepository.findAll();
+	}
 
-    }
-    
-    @DeleteMapping("/work/{id}")
-    public Map<String, Boolean> deleteWork(@PathVariable(value = "id") Long workId)
-         throws ResourceNotFoundException {
-        Work work = workRepository.findById(workId)
-       .orElseThrow(() -> new ResourceNotFoundException("Work not found for this id :: " + workId));
+	@GetMapping("/work/{id}")
+	public ResponseEntity<Work> getWorkById(@PathVariable(value = "id") Long workId) throws ResourceNotFoundException {
+		Work work = workRepository.findById(workId)
+				.orElseThrow(() -> new ResourceNotFoundException("Work not found for this id :: " + workId));
+		return ResponseEntity.ok().body(work);
+	}
 
-        workRepository.delete(work);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return response;
-    }
-    
-    
-    
-    
+	@PostMapping("/work")
+	public Work createWork(@Valid @RequestBody Work work) {
+		return workRepository.save(work);
+	}
+
+	@PutMapping("/work/{id}")
+	public ResponseEntity<Work> updateWork(@PathVariable(value = "id") Long workId,
+			@Valid @RequestBody Work workDetails) throws ResourceNotFoundException {
+		Work work = workRepository.findById(workId)
+				.orElseThrow(() -> new ResourceNotFoundException("Work not found for this id :: " + workId));
+
+		work.setWorkName(workDetails.getWorkName());
+		work.setStartingDate(workDetails.getStartingDate());
+		work.setEndingDate(workDetails.getEndingDate());
+		work.setStatus(workDetails.getStatus());
+		final Work updatedWork = workRepository.save(work);
+		return ResponseEntity.ok(updatedWork);
+
+	}
+
+	@DeleteMapping("/work/{id}")
+	public Map<String, Boolean> deleteWork(@PathVariable(value = "id") Long workId) throws ResourceNotFoundException {
+		Work work = workRepository.findById(workId)
+				.orElseThrow(() -> new ResourceNotFoundException("Work not found for this id :: " + workId));
+
+		workRepository.delete(work);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return response;
+	}
+
 }
